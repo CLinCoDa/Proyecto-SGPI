@@ -1,4 +1,5 @@
 from datetime import timedelta
+import os
 
 from decouple import config
 """
@@ -115,7 +116,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
+
+if os.environ.get('GITHUB_ACTIONS') == 'true':
+    # Configuración para el pipeline (SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+else:
+    # Configuración de PostgreSQL para desarrollo local
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': config('DB_NAME'),
@@ -125,6 +137,8 @@ DATABASES = {
         'PORT': config('DB_PORT'),
     }
 }
+
+
 
 
 # Password validation
