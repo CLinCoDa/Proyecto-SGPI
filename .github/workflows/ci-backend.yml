@@ -27,14 +27,13 @@ jobs:
 
       - name: Ejecutar pruebas del backend
         env:
-            DEBUG=True
-            SECRET_KEY=dev-secret-key-12345
-            DB_NAME=sgpi_db
-            DB_USER=william
-            DB_PASSWORD=Ariel20xx
-            DB_HOST=localhost
-            DB_PORT=5432
-
+            SECRET_KEY: "dev-secret-key-12345"
+            DEBUG: "True"
+            DB_NAME: "sgpi_db"
+            DB_USER: "william"
+            DB_PASSWORD: "test_password"
+            DB_HOST: "localhost"
+            DB_PORT: "5432"
             # Añadir cualquier otra variable del settings.py (DB_NAME, etc.)
         run: |
           cd backend
