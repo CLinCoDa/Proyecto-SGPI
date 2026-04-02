@@ -27,14 +27,15 @@ jobs:
 
       - name: Ejecutar pruebas del backend
         env:
-            SECRET_KEY: "dev-secret-key-12345"
+            SECRET_KEY: "test-key-ci"
             DEBUG: "True"
-            DB_NAME: "sgpi_db"
-            DB_USER: "william"
-            DB_PASSWORD: "test_password"
+            # Esto le dice a Django: "Para el test, no busques Postgres, usa SQLite"
+            DATABASE_URL: "sqlite:///:memory:" 
+            DB_NAME: "test_db"
+            DB_USER: "user"
+            DB_PASSWORD: "pass"
             DB_HOST: "localhost"
             DB_PORT: "5432"
-            # Añadir cualquier otra variable del settings.py (DB_NAME, etc.)
         run: |
           cd backend
           # Archivo manage.py en la carpeta backend
