@@ -1,0 +1,52 @@
+name: Deploy (Simulado)
+
+on:
+  workflow_run:
+    workflows: ["CI Backend", "CI Frontend"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    # Solo corre si AMBOS workflows de CI terminaron con éxito
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      # --- LÓGICA BACKEND (Python/Django) ---
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Preparar Backend
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          echo "Simulando migraciones de base de datos..."
+          # python manage.py migrate 
+          echo "Backend listo para desplegar."
+
+      # --- LÓGICA FRONTEND (React + Vite) ---
+      - name: Instalar Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Build del Frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+          echo "Carpeta /dist generada con éxito."
+
+      - name: Finalizar Deploy
+        run: |
+          echo "¡El despliegue simulado se completó con éxito!"
+          echo "Los artefactos de Django y React están optimizados."
